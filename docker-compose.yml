@@ -1,0 +1,17 @@
+services:
+  java_apps:
+    container_name: java_apps        
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - java_dbs
+  java_dbs:
+    container_name: java_dbs
+    image: postgres:latest
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
