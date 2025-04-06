@@ -1,9 +1,13 @@
 package com.gt11.RECUVA.Resources;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import com.gt11.RECUVA.Ratings.Ratings;
 import com.gt11.RECUVA.Subjects.Subject;
 import com.gt11.RECUVA.Users.User;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -43,6 +48,9 @@ public class Resource {
     @JoinColumn(name = "userID")
     @ManyToOne()
     private User user;
+
+    @OneToMany(mappedBy = "resourceID", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    private List<Ratings> ratings;
 
     //Constructores
     public Resource() {
@@ -118,6 +126,14 @@ public class Resource {
         this.user = user;
     }
 
+    
+    public List<Ratings> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<Ratings> ratings) {
+        this.ratings = ratings;
+    }  
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -143,5 +159,7 @@ public class Resource {
         } else if (!id.equals(other.id))
             return false;
         return true;
-    }    
+    }
+
+     
 }

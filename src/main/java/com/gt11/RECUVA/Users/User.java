@@ -34,10 +34,10 @@ public class User {
     @Column(name = "role")
     private Boolean role;
 
-    @OneToMany(mappedBy = "users", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @OneToMany(mappedBy = "userID", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Resource> resource;
 
-    @OneToMany(mappedBy = "users", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @OneToMany(mappedBy = "userID", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Ratings> ratings;
 
     //Constructors    
