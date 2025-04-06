@@ -17,7 +17,7 @@ public class SubjectController {
 
     @GetMapping("/subject") 
     public String listSubject(Model model) {
-        model.addAttribute("users", subjectsRepository.findAll());
+        model.addAttribute("subject", subjectsRepository.findAll());
         return "list-subject"; // aqui coloquen donde tienen la tabla de lista 
     }
 
