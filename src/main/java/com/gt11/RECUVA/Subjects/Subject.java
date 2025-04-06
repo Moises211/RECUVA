@@ -27,7 +27,7 @@ public class Subject {
     @Column(name = "description")
     private String descripcion;
 
-    @OneToMany(mappedBy = "subjects", cascade = { CascadeType.REMOVE, CascadeType.MERGE })
+    @OneToMany(mappedBy = "subjectID", cascade = { CascadeType.REMOVE, CascadeType.MERGE })
     private List<Resource> resource;
 
     // Contructores
