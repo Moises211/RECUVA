@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Materia</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+    <h2 th:text="${materia.id != null} ? 'Editar Materia' : 'Nueva Materia'"></h2>
+    
+    <form th:action="@{/subjectNew}" th:object="${materia}" method="post">
+        <input type="hidden" th:field="*{id}" />
+        
+        <div class="mb-3">
+            <label for="name" class="form-label">Nombre</label>
+            <input type="text" th:field="*{name}" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="code" class="form-label">Código</label>
+            <input type="text" th:field="*{code}" class="form-control" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="/subject" class="btn btn-secondary">Cancelar</a>
+    </form>
+</body>
+</html>
