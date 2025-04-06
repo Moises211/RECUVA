@@ -23,6 +23,7 @@ import jakarta.persistence.Table;
 public class Resource {
 
     @Id
+    @Column(name ="resourceID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -41,15 +42,15 @@ public class Resource {
     @Column(name = "create_at")
     private LocalDate fechaCreacion;
 
-    @JoinColumn(name = "subjectID")
+    @JoinColumn(name = "subjectsID")
     @ManyToOne()
     private Subject subject;
     
-    @JoinColumn(name = "userID")
+    @JoinColumn(name = "usersID")
     @ManyToOne()
     private User user;
 
-    @OneToMany(mappedBy = "resourceID", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @OneToMany(mappedBy = "resource", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Ratings> ratings;
 
     //Constructores

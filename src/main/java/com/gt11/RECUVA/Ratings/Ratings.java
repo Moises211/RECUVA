@@ -17,6 +17,7 @@ import jakarta.persistence.Table;
 public class Ratings {
 
     @Id
+    @Column(name="ratingsID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

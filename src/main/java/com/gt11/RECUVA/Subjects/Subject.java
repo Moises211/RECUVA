@@ -18,6 +18,7 @@ import jakarta.persistence.GenerationType;
 public class Subject {
 
     @Id
+    @Column(name = "subjectsID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -27,7 +28,7 @@ public class Subject {
     @Column(name = "description")
     private String descripcion;
 
-    @OneToMany(mappedBy = "subjectID", cascade = { CascadeType.REMOVE, CascadeType.MERGE })
+    @OneToMany(mappedBy = "subject", cascade = { CascadeType.REMOVE, CascadeType.MERGE })
     private List<Resource> resource;
 
     // Contructores

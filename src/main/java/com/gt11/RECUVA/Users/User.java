@@ -19,6 +19,7 @@ import jakarta.persistence.GenerationType;
 public class User {
 
     @Id
+    @Column(name="usersID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -34,10 +35,10 @@ public class User {
     @Column(name = "role")
     private Boolean role;
 
-    @OneToMany(mappedBy = "userID", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Resource> resource;
 
-    @OneToMany(mappedBy = "userID", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Ratings> ratings;
 
     //Constructors    
