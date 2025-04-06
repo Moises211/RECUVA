@@ -8,8 +8,10 @@
 <body class="container mt-5">
     <h2>Materias Registradas</h2>
 
+    <!-- Botón para agregar nueva materia -->
     <a href="/subjectNew" class="btn btn-success mb-3">Agregar Nueva Materia</a>
 
+    <!-- Tabla de materias -->
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -20,12 +22,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="materia : ${users}">
-                <td th:text="${materia.id}">1</td>
-                <td th:text="${materia.name}">Ejemplo</td>
-                <td th:text="${materia.code}">COD123</td>
+            <!-- Iterar sobre la lista de materias -->
+            <tr th:each="materia : ${subject}">
+                <td th:text="${materia.id}"></td>
+                <td th:text="${materia.materia}"></td>
+                <td th:text="${materia.descripcion}"></td>
                 <td>
+                    <!-- Botón para editar -->
                     <a th:href="@{/editSubject/{id}(id=${materia.id})}" class="btn btn-warning btn-sm">Editar</a>
+                    <!-- Botón para eliminar -->
                     <a th:href="@{/deleteSubject/{id}(id=${materia.id})}" class="btn btn-danger btn-sm"
                        onclick="return confirm('¿Estás seguro de eliminar esta materia?')">Eliminar</a>
                 </td>
