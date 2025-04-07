@@ -24,30 +24,36 @@
                             <th>ID</th>
                             <th>Título</th>
                             <th>Tipo</th>
-                            <th>Autor</th>
+                            <th>Descripcion</th>
+                            <th>URL</th>
                             <th>Año</th>
+                            <th>Materia</th>
+                            <th>Creador</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="recurso : ${recursos}">
+                        <tr th:each="recurso : ${resources}">
                             <td th:text="${recurso.id}"></td>
                             <td th:text="${recurso.titulo}"></td>
-                            <td th:text="${recurso.tipo}"></td>
-                            <td th:text="${recurso.autor}"></td>
-                            <td th:text="${recurso.anioPublicacion}"></td>
+                            <td th:text="${recurso.descripcion}"></td>
+                            <td th:text="${recurso.tipoDoc}"></td>
+                            <td th:text="${recurso.url}"></td>
+                            <td th:text="${recurso.fechaCreacion}"></td>
+                            <td th:text="${recurso.subject.materia}"></td>
+                            <td th:text="${recurso.user.name}"></td>
                             <td>
-                                <a class="btn btn-sm btn-info" th:href="@{'/editar/' + ${recurso.id}}">Editar</a>
-                                <a class="btn btn-sm btn-danger" th:href="@{'/eliminar/' + ${recurso.id}}"
+                                <a class="btn btn-sm btn-info" th:href="@{'/editResource/' + ${recurso.id}}">Editar</a>
+                                <a class="btn btn-sm btn-danger" th:href="@{'/deleteResource/' + ${recurso.id}}"
                                    onclick="return confirm('¿Eliminar este recurso permanentemente?')">Eliminar</a>
-                                <a class="btn btn-sm btn-secondary" th:href="@{'/detalles/' + ${recurso.id}}">Ver</a>
+                                <!-- a class="btn btn-sm btn-secondary" th:href="@{'/detalles/' + ${recurso.id}}">Ver</a -->
                             </td>
                         </tr>
                     </tbody>
                 </table>
                 <!-- Botón para agregar nuevo recurso -->
                 <div class="text-end mt-3">
-                    <a class="btn btn-success" th:href="@{/nuevo}">Agregar Recurso</a>
+                    <a class="btn btn-success" th:href="@{/resourceNew}">Agregar Recurso</a>
                 </div>
             </div>
         </div>
