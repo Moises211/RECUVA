@@ -6,7 +6,11 @@
             "server": "localhost",
             "port": 5433,
             "driver": "PostgreSQL",
+<<<<<<< HEAD
             "name": "pgdbase",
+=======
+            "name": "PGBD",
+>>>>>>> 7ebec56 (Temporal)
             "database": "postgres",
             "username": "postgres"
         }

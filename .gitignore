@@ -30,4 +30,4 @@ HELP.md
 #!**/src/test/**/build/
 
 ### VS Code ###
-#.vscode/
+.vscode/
