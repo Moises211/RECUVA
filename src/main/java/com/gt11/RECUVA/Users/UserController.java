@@ -1,5 +1,9 @@
 package com.gt11.RECUVA.Users;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +29,7 @@ public class UserController {
     @GetMapping("/usersNew") 
     public String formNewUser(Model model) {
         model.addAttribute("usuario", new User());
-        return "form-user"; // aqui coloquen donde tienen el form para agregar usuarios.
+        return "form-users"; // aqui coloquen donde tienen el form para agregar usuarios.
     }
 
     @PostMapping("/usersNew") 
@@ -39,13 +43,20 @@ public class UserController {
     public String formEditUser(Model model, @PathVariable Long id) {
         User usuario = usersRepository.findById(id).get();
         model.addAttribute("usuario", usuario);
-        return "form-user"; // aqui coloquen donde tienen el form para agregar usuarios.
+        return "form-users"; // aqui coloquen donde tienen el form para agregar usuarios.
     }
 
     @GetMapping("/deleteUser/{id}")
     public String deleteUser(@PathVariable Long id) {
         usersRepository.delete(new User(id));
         return "redirect:/users"; 
+    }
+
+    public ArrayList<User> usersList(){
+        //Object[] ls = usersRepository.f;
+        ArrayList<User> usersList = new ArrayList<>();
+        usersList.addAll(usersRepository.findAll());        
+        return usersList;
     }
 
 }

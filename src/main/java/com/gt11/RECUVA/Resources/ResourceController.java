@@ -24,7 +24,7 @@ public class ResourceController {
 
     @GetMapping("/resourceNew")
     public String formNewResource(Model model) {
-        model.addAttribute("recurso", new Resource());
+        model.addAttribute("recurso", new Resource());        
         return "form-resource"; // aqui coloquen donde tienen el form para agregar recursos.
     }
 
