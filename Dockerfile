@@ -20,13 +20,14 @@ RUN chmod +x mvnw
 
 # Instalar Maven Wrapper y compilar el proyecto
 #RUN ./mvnw clean package -DskipTests
-RUN ["./mvnw", "clean", "package", "-Pproduction", "-DskipTests"]
-RUN mv /app/target/RECUVA-1.0-SNAPSHOT.jar /app/app.jar
+#RUN ["./mvnw", "clean", "package", "-Pproduction", "-DskipTests"]
+RUN ["./mvnw", "clean", "package", "-DskipTests"]
+#RUN mv /app/target/RECUVA-1.0-SNAPSHOT.jar /app/app.jar
 # Exponer el puerto en el que se ejecutará tu aplicación (por ejemplo, 8080)
 #EXPOSE 8080
 EXPOSE 9000
 
 WORKDIR /app
 
-#CMD ["java", "-jar", "target/RECUVA-0.0.1-SNAPSHOT.jar"]
-CMD ["java", "-jar", "/app/app.jar"]
+CMD ["java", "-jar", "target/RECUVA-0.0.1-SNAPSHOT.jar"]
+#CMD ["java", "-jar", "/app/app.jar"]
