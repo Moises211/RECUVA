@@ -20,7 +20,7 @@ RUN chmod +x mvnw
 
 # Instalar Maven Wrapper y compilar el proyecto
 #RUN ./mvnw clean package -DskipTests
-RUN ["./mvnw", "clean", "package", "-DskipTests"]
+RUN ["./mvnw", "clean", "package", "-Pproduction", "-DskipTests"]
 RUN mv /app/target/novarentacares-1.0-SNAPSHOT.jar /app/app.jar
 # Exponer el puerto en el que se ejecutará tu aplicación (por ejemplo, 8080)
 #EXPOSE 8080
