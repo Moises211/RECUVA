@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/login") // Puedes crear una página de login personalizada si lo deseas
                         .defaultSuccessUrl("/dashboard", true) // Redirige después del login exitoso
-                        .failureUrl("/error"))
+                        .failureUrl("/dashboard"))
                 // Configuración para el Resource Server (backend API)
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))

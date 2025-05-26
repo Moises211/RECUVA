@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,28 +38,10 @@
       margin-bottom: 25px;
     }
 
+    /* Puedes mantener esto si no quieres que aparezcan campos de input,
+       pero la solución ideal es eliminarlos del HTML si no se usan. */
     .input-group {
-      position: relative;
-      margin-bottom: 20px;
-    }
-
-    .input-group input {
-      width: 100%;
-      padding: 12px 40px 12px 40px;
-      border: none;
-      border-radius: 25px;
-      background-color: #ffffff;
-      font-size: 16px;
-      outline: none;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
-    }
-
-    .input-group i {
-      position: absolute;
-      left: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #aaa;
+      display: none; /* Oculta los campos de usuario y contraseña */
     }
 
     .login-button {
@@ -80,19 +62,11 @@
       background-color: #0d8de6;
     }
 
+    /* Ocultamos el enlace de "Olvidaste tu contraseña" ya que Auth0 lo maneja */
     .forgot {
-      margin-top: 15px;
-      display: block;
-      color: #333;
-      font-size: 14px;
-      text-decoration: none;
-    }
-
-    .forgot:hover {
-      text-decoration: underline;
+      display: none; /* Oculta el enlace de "Olvidaste tu contraseña" */
     }
   </style>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -100,16 +74,8 @@
     <img src="logo.jpg" alt="Logo Recuva" class="logo">
     <div class="welcome-text">Bienvenid@</div>
 
-    <form action="login.php" method="POST">
-      <div class="input-group">
-        <i class="fas fa-user"></i>
-        <input type="text" name="usuario" placeholder="Usuario" required>
-      </div>
-      <div class="input-group">
-        <i class="fas fa-lock"></i>
-        <input type="password" name="contrasena" placeholder="Contraseña" required>
-      </div>
-      <button type="submit" class="login-button">Iniciar Sesión</button>
+    <form th:action="@{/oauth2/authorization/auth0}" method="GET">
+      <button type="submit" class="login-button">Iniciar Sesión con Auth0</button>
     </form>
 
     <a href="#" class="forgot">¿Olvidaste tu contraseña?</a>
