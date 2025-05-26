@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Catálogo de Recursos Académicos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #fcf8ef;
+      color: #1f1f1f;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 30px 60px 20px;
+    }
+
+    .logo-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .logo-area img {
+      width: 70px;
+      margin-bottom: 6px;
+    }
+
+    .dropdown-arrow {
+      font-size: 20px;
+      color: #999;
+      cursor: pointer;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 90px;
+      background-color: white;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      z-index: 1000;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 10px 20px;
+      color: #1f1f1f;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #f2f2f2;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .welcome {
+      font-size: 16px;
+      color: #333;
+    }
+
+    .welcome span {
+      color: #2a7de1;
+      font-weight: 600;
+    }
+
+    .section-title {
+      font-size: 16px;
+      text-align: center;
+      font-weight: 600;
+      color: #aaa;
+      margin-top: 30px;
+      margin-bottom: 10px;
+    }
+
+    .subjects {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .subject {
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .subject img {
+      width: 80px;
+      height: 80px;
+      background-color: #fff;
+      border-radius: 20px;
+      padding: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .subject p {
+      margin-top: 10px;
+    }
+
+    .resources {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 60px;
+      padding: 20px 60px;
+    }
+
+    .resource-group {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .resource {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    .resource img {
+      width: 22px;
+      height: 22px;
+    }
+
+    .stars {
+      color: #f8b400;
+      font-size: 13px;
+      letter-spacing: 1px;
+    }
+
+    a {
+      text-decoration: none;
+      color: #1f1f1f;
+      font-weight: 500;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo-area">
+      <img src="logo.jpg" alt="RECUVA">
+      <div class="dropdown-arrow" onclick="toggleDropdown()">&#9660;</div>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <a href="#">Perfil</a>
+        <a href="#">Mis recursos</a>
+        <a href="#">Cerrar sesión</a>
+      </div>
+    </div>
+
+    <h1 class="title">Catálogo de Recursos Académicos</h1>
+
+    <div class="welcome">
+      Que bueno tenerte de regreso, <span>@usuario</span>
+    </div>
+  </div>
+
+  <div class="section-title">Acceso rápido por materia</div>
+  <div class="subjects">
+    <div class="subject">
+      <img src="https://img.icons8.com/color/96/000000/math.png" alt="Matemática">
+      <p>Matemática</p>
+    </div>
+    <div class="subject">
+      <img src="https://img.icons8.com/color/96/physics.png" alt="Ciencia">
+      <p>Ciencia</p>
+    </div>
+    <div class="subject">
+      <img src="https://img.icons8.com/color/96/laboratory.png" alt="Química">
+      <p>Química</p>
+    </div>
+    <div class="subject">
+      <img src="https://img.icons8.com/color/96/books.png" alt="Literatura">
+      <p>Literatura</p>
+    </div>
+    <div class="subject">
+      <img src="https://img.icons8.com/color/96/abc.png" alt="Idioma">
+      <p>Idioma</p>
+    </div>
+    <div class="subject">
+      <img src="https://img.icons8.com/color/96/globe--v1.png" alt="Geografía">
+      <p>Geografía</p>
+    </div>
+  </div>
+
+  <div class="section-title">Recursos destacados</div>
+  <div class="resources">
+    <div class="resource-group">
+      <div class="resource">
+        <img src="https://img.icons8.com/fluency/48/map.png" alt="Mapa">
+        <a href="#">Mapa de Eurasia</a>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      </div>
+      <div class="resource">
+        <img src="https://img.icons8.com/color/48/apple-app-store--v1.png" alt="App">
+        <a href="#">RAMA Studio iOS</a>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      </div>
+    </div>
+    <div class="resource-group">
+      <div class="resource">
+        <img src="https://img.icons8.com/color/48/google-play.png" alt="App">
+        <a href="#">MathLab (Android)</a>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+      </div>
+      <div class="resource">
+        <img src="https://img.icons8.com/color/48/youtube-play.png" alt="Video">
+        <a href="#">Curso de Algoritmos</a>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+      </div>
+    </div>
+    <div class="resource-group">
+      <div class="resource">
+        <img src="https://img.icons8.com/office/40/pdf.png" alt="PDF">
+        <a href="#">Mapa de Eurasia</a>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      </div>
+      <div class="resource">
+        <img src="https://img.icons8.com/office/40/word.png" alt="DOC">
+        <a href="#">Portada Ensayo</a>
+        <div class="stars">&#9733;&#9733;&#9733;&#9734;&#9734;</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Últimos recursos añadidos</div>
+  <div class="resources">
+    <div class="resource-group">
+      <div class="resource">
+        <img src="https://img.icons8.com/office/40/word.png" alt="DOC">
+        <a href="#">Álgebra avanzada</a>
+      </div>
+    </div>
+    <div class="resource-group">
+      <div class="resource">
+        <img src="https://img.icons8.com/color/48/youtube-play.png" alt="Video">
+        <a href="#">Experimentos química 1</a>
+      </div>
+    </div>
+    <div class="resource-group">
+      <div class="resource">
+        <img src="https://img.icons8.com/office/40/pdf.png" alt="PDF">
+        <a href="#">Historia infografía</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleDropdown() {
+      const menu = document.getElementById("dropdownMenu");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+
+    window.addEventListener('click', function (e) {
+      const dropdown = document.getElementById("dropdownMenu");
+      const arrow = document.querySelector(".dropdown-arrow");
+      if (!arrow.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.style.display = "none";
+      }
+    });
+  </script>
+
+</body>
+</html>

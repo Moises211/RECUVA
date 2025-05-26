@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Subir recurso - RECUVA</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f4ea;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .logo-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .logo-section img {
+      width: 60px;
+      height: auto;
+    }
+
+    .logo-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #1f1f1f;
+      margin-top: 5px;
+    }
+
+    .dropdown-toggle {
+      font-size: 18px;
+      font-weight: bold;
+      color: #555;
+      cursor: pointer;
+      margin-top: 6px;
+      user-select: none;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      margin-top: 8px;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      width: 180px;
+      z-index: 100;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      color: #333;
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .upload-title {
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .upload-title::before {
+      content: "⤴️";
+      font-size: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: normal;
+    }
+
+    input[type="text"],
+    select,
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 2px solid #333;
+      border-radius: 10px;
+      background-color: white;
+    }
+
+    input[type="file"] {
+      padding: 6px;
+    }
+
+    button {
+      display: block;
+      margin: 20px auto 0;
+      padding: 10px 30px;
+      font-size: 15px;
+      background-color: #3f88f7;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2e70d4;
+    }
+
+    .menu-icon {
+      position: absolute;
+      top: 25px;
+      right: 30px;
+      font-size: 26px;
+      color: #888;
+      cursor: pointer;
+    }
+
+    @media screen and (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+
+      .menu-icon {
+        right: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="menu-icon">≡</div>
+
+  <div class="container">
+    <!-- Sección de Logo + Flecha -->
+    <div class="logo-section">
+      <img src="logo.jpg" alt="Logo RECUVA">
+      <div class="logo-title">RECUVA</div>
+      <div class="dropdown-toggle" onclick="toggleMenu()">CLICK MENU</div>
+
+      <!-- Menú Desplegable -->
+      <div class="dropdown-menu" id="dropdownMenu">
+        <a href="#">Mis recursos</a>
+        <a href="#">Subir recurso</a>
+        <a href="#">Cerrar sesión</a>
+      </div>
+    </div>
+
+    <!-- Formulario -->
+    <div class="upload-title">Subir un recurso:</div>
+    <form>
+      <label for="titulo">Título:</label>
+      <input type="text" id="titulo" name="titulo">
+
+      <label for="tipo">Tipo:</label>
+      <select id="tipo" name="tipo">
+        <option value="">Seleccione el tipo</option>
+        <option value="pdf">PDF</option>
+        <option value="enlace">Enlace</option>
+        <option value="video">Video</option>
+      </select>
+
+      <label for="archivo">Archivo o enlace:</label>
+      <input type="file" id="archivo" name="archivo">
+
+      <label for="materia">Materia:</label>
+      <select id="materia" name="materia">
+        <option value="">Seleccione la materia</option>
+        <option value="matematica">Matemática</option>
+        <option value="historia">Historia</option>
+        <option value="ciencias">Ciencias</option>
+      </select>
+
+      <button type="submit">Subir</button>
+    </form>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('dropdownMenu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Cierra el menú si se hace clic fuera
+    document.addEventListener('click', function(event) {
+      const menu = document.getElementById('dropdownMenu');
+      const toggle = document.querySelector('.dropdown-toggle');
+      if (!menu.contains(event.target) && !toggle.contains(event.target)) {
+        menu.style.display = 'none';
+      }
+    });
+  </script>
+
+</body>
+</html>

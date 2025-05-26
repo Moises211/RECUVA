@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login Recuva</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f9f4ea;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      text-align: center;
+      width: 100%;
+      max-width: 350px;
+      padding: 20px;
+    }
+
+    .logo {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+
+    .welcome-text {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 25px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 40px 12px 40px;
+      border: none;
+      border-radius: 25px;
+      background-color: #ffffff;
+      font-size: 16px;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .input-group i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #aaa;
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 12px;
+      background-color: #1aa9ff;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
+
+    .login-button:hover {
+      background-color: #0d8de6;
+    }
+
+    .forgot {
+      margin-top: 15px;
+      display: block;
+      color: #333;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .forgot:hover {
+      text-decoration: underline;
+    }
+  </style>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <div class="login-container">
+    <img src="logo.jpg" alt="Logo Recuva" class="logo">
+    <div class="welcome-text">Bienvenid@</div>
+
+    <form action="login.php" method="POST">
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input type="text" name="usuario" placeholder="Usuario" required>
+      </div>
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" name="contrasena" placeholder="Contraseña" required>
+      </div>
+      <button type="submit" class="login-button">Iniciar Sesión</button>
+    </form>
+
+    <a href="#" class="forgot">¿Olvidaste tu contraseña?</a>
+  </div>
+
+</body>
+</html>
