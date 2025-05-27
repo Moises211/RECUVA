@@ -1,49 +1,57 @@
-package com.gt11.RECUVA.controller; // Ajusta el paquete según tu estructura
+package com.gt11.RECUVA.controller;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Controller
 public class DashboardController {
 
     @GetMapping("/dashboard")
-    public String dashboard(Model model) {
-        // Obtener la información de autenticación del contexto de seguridad
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication instanceof OAuth2AuthenticationToken) {
-            OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
-
-            // Obtener el nombre del usuario (normalmente del 'name' o 'preferred_username' del principal)
-            String userName = oauthToken.getPrincipal().getAttribute("name");
-            if (userName == null) {
-                // Si 'name' no está disponible, intenta con 'email' o 'preferred_username'
-                userName = oauthToken.getPrincipal().getAttribute("email");
+    public String dashboard(@AuthenticationPrincipal OidcUser principal, Model model) {
+        if (principal != null) {
+            // Obtener el nombre del usuario (puedes ajustar 'name' por 'nickname', 'preferred_username', etc. según tus claims de Auth0)
+            String userName = principal.getAttribute("name");
+            if (userName == null || userName.isEmpty()) {
+                userName = principal.getEmail(); // Fallback al email si el nombre no está disponible
             }
-            if (userName == null) {
-                userName = oauthToken.getPrincipal().getName(); // Último recurso, el nombre principal
+            if (userName == null || userName.isEmpty()) {
+                 userName = principal.getPreferredUsername(); // Otro fallback si el nombre no está disponible
             }
-
+            if (userName == null || userName.isEmpty()) {
+                userName = principal.getSubject(); // Último recurso, el ID del usuario
+            }
             model.addAttribute("userName", userName);
-            model.addAttribute("userEmail", oauthToken.getPrincipal().getAttribute("email"));
-            // Puedes añadir más atributos si los necesitas del principal, como avatar, etc.
-            // model.addAttribute("userPicture", oauthToken.getPrincipal().getAttribute("picture"));
 
-        } else {
-            // Esto es para usuarios que no inician sesión con OAuth2, si tienes otros métodos.
-            model.addAttribute("userName", authentication.getName());
-            model.addAttribute("userEmail", "N/A (No OAuth2)");
+            // También puedes añadir los roles al modelo si quisieras mostrarlos explícitamente, aunque Thymeleaf los usa directamente
+            // Collection<? extends GrantedAuthority> authorities = principal.getAuthorities();
+            // String roles = authorities.stream()
+            //        .map(GrantedAuthority::getAuthority)
+            //        .collect(Collectors.joining(", "));
+            // model.addAttribute("userRoles", roles);
+
         }
-
-        return "dashboard"; // Esto buscará el archivo dashboard.html en src/main/resources/templates
+        return "dashboard"; // Retorna el nombre de tu archivo HTML (dashboard.html)
     }
 
-    @GetMapping("/") // Para que la raíz '/' sea accesible y redirija al dashboard si está autenticado
-    public String root() {
-        return "redirect:/dashboard"; // Redirige a /dashboard si se accede a la raíz
+    // Opcional: Controladores para las nuevas rutas, solo para mostrar un mensaje por ahora.
+    // Esto se podría convertir en controladores reales que manejen la lógica de ver/añadir recursos.
+    @GetMapping("/resources/view")
+    public String viewResources(Model model) {
+        model.addAttribute("message", "Esta es la página para ver todos los recursos.");
+        return "generic_message"; // Necesitarás crear generic_message.html
+    }
+
+    @GetMapping("/resources/add")
+    public String addResource(Model model) {
+        model.addAttribute("message", "Esta es la página para añadir un nuevo recurso. Solo para ADMINS.");
+        return "generic_message"; // Necesitarás crear generic_message.html
     }
 }

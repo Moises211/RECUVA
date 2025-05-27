@@ -2,72 +2,285 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Recuva</title>
+    <title>Catálogo de Recursos Académicos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f4ea;
-            color: #333;
             margin: 0;
-            padding: 20px;
+            font-family: 'Poppins', sans-serif;
+            background-color: #fcf8ef;
+            color: #1f1f1f;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 60px 20px;
+        }
+
+        .logo-area {
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
+            position: relative;
         }
-        .dashboard-container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+        .logo-area img {
+            width: 70px;
+            margin-bottom: 6px;
+        }
+
+        .dropdown-arrow {
+            font-size: 20px;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 90px;
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            z-index: 1000;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 20px;
+            color: #1f1f1f;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f2f2f2;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .welcome {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .welcome span {
+            color: #2a7de1;
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-size: 16px;
             text-align: center;
-            width: 100%;
-            max-width: 600px;
-        }
-        h1 {
-            color: #1aa9ff;
-            margin-bottom: 20px;
-        }
-        p {
-            font-size: 1.1em;
+            font-weight: 600;
+            color: #aaa;
+            margin-top: 30px;
             margin-bottom: 10px;
         }
-        .user-info {
-            margin-top: 25px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
+
+        /* Nuevos estilos para los botones de acceso rápido */
+        .quick-access-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px; /* Aumenta el espacio entre los botones */
+            margin-top: 20px;
+            margin-bottom: 40px; /* Un poco más de espacio debajo */
         }
-        .logout-button {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 10px 20px;
-            background-color: #ff4d4d;
+
+        .quick-access-button {
+            background-color: #4CAF50; /* Color verde */
             color: white;
+            padding: 15px 30px; /* Más padding para que sean más grandes */
+            border-radius: 10px;
             text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
+            font-size: 18px; /* Texto más grande */
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Sombra para profundidad */
         }
-        .logout-button:hover {
-            background-color: #e60000;
+
+        .quick-access-button:hover {
+            background-color: #45a049; /* Verde más oscuro al pasar el mouse */
+            text-decoration: none; /* Asegúrate de que no se subraye al pasar el mouse */
+        }
+
+        /* Estilo específico para el botón de "Añadir recursos" si es diferente */
+        .quick-access-button.add-resource {
+             background-color: #2a7de1; /* Azul de Auth0 */
+        }
+
+        .quick-access-button.add-resource:hover {
+            background-color: #1e6ec4; /* Azul más oscuro al pasar el mouse */
+        }
+
+        .resources {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 60px;
+            padding: 20px 60px;
+        }
+
+        .resource-group {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .resource {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .resource img {
+            width: 22px;
+            height: 22px;
+        }
+
+        .stars {
+            color: #f8b400;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #1f1f1f;
+            font-weight: 500;
+        }
+
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <h1>Bienvenido al Dashboard de Recuva</h1>
 
-        <div class="user-info">
-            <p>Has iniciado sesión como:</p>
-            <p><strong>Nombre:</strong> <span th:text="${userName}">Usuario Desconocido</span></p>
-            <p><strong>Email:</strong> <span th:text="${userEmail}">Email Desconocido</span></p>
+    <div class="header">
+        <div class="logo-area">
+            <img src="logo.jpg" alt="RECUVA">
+            <div class="dropdown-arrow" onclick="toggleDropdown()">&#9660;</div>
+            <div class="dropdown-menu" id="dropdownMenu">                
+                <a href="#" id="logout-link">Cerrar sesión</a>
             </div>
+        </div>
 
-        <p>¡Este es tu espacio personal!</p>
+        <h1 class="title">Catálogo de Recursos Académicos</h1>
 
-        <form th:action="@{/logout}" method="post">
-            <button type="submit" class="logout-button">Cerrar Sesión</button>
-        </form>
+        <div class="welcome">
+            Que bueno tenerte de regreso, <span th:text="${userName}">@usuario</span>
+        </div>
     </div>
+
+    <div class="section-title">Acciones rápidas</div>
+    <div class="quick-access-buttons">
+        <a href="/resource" class="quick-access-button">Ver recursos</a>
+        <a th:href="@{/resourceNew}" class="quick-access-button">Insertar Recursos</a>
+        <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" href="/resources/add" class="quick-access-button add-resource">Añadir recursos</a>
+    </div>
+
+    <div class="section-title">Recursos destacados</div>
+    <div class="resources">
+        <div class="resource-group">
+            <div class="resource">
+                <img src="https://img.icons8.com/fluency/48/map.png" alt="Mapa">
+                <a href="#">Mapa de Eurasia</a>
+                <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            </div>
+            <div class="resource">
+                <img src="https://img.icons8.com/color/48/apple-app-store--v1.png" alt="App">
+                <a href="#">RAMA Studio iOS</a>
+                <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            </div>
+        </div>
+        <div class="resource-group">
+            <div class="resource">
+                <img src="https://img.icons8.com/color/48/google-play.png" alt="App">
+                <a href="#">MathLab (Android)</a>
+                <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+            </div>
+            <div class="resource">
+                <img src="https://img.icons8.com/color/48/youtube-play.png" alt="Video">
+                <a href="#">Curso de Algoritmos</a>
+                <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+            </div>
+        </div>
+        <div class="resource-group">
+            <div class="resource">
+                <img src="https://img.icons8.com/office/40/pdf.png" alt="PDF">
+                <a href="#">Mapa de Eurasia</a>
+                <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            </div>
+            <div class="resource">
+                <img src="https://img.icons8.com/office/40/word.png" alt="DOC">
+                <a href="#">Portada Ensayo</a>
+                <div class="stars">&#9733;&#9733;&#9733;&#9734;&#9734;</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">Últimos recursos añadidos</div>
+    <div class="resources">
+        <div class="resource-group">
+            <div class="resource">
+                <img src="https://img.icons8.com/office/40/word.png" alt="DOC">
+                <a href="#">Álgebra avanzada</a>
+            </div>
+        </div>
+        <div class="resource-group">
+            <div class="resource">
+                <img src="https://img.icons8.com/color/48/youtube-play.png" alt="Video">
+                <a href="#">Experimentos química 1</a>
+            </div>
+        </div>
+        <div class="resource-group">
+            <div class="resource">
+                <img src="https://img.icons8.com/office/40/pdf.png" alt="PDF">
+                <a href="#">Historia infografía</a>
+            </div>
+        </div>
+    </div>
+
+    <form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;">
+        </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(event) {
+                    event.preventDefault(); // Previene la acción por defecto del enlace (navegar a #)
+                    document.getElementById('logoutForm').submit(); // Envía el formulario de logout
+                });
+            }
+        });
+    </script>
+
+    <script>
+        function toggleDropdown() {
+            const menu = document.getElementById("dropdownMenu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
+        window.addEventListener('click', function (e) {
+            const dropdown = document.getElementById("dropdownMenu");
+            const arrow = document.querySelector(".dropdown-arrow");
+            if (!arrow.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+    </script>
+
 </body>
 </html>
