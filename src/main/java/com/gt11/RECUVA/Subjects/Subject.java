@@ -28,8 +28,13 @@ public class Subject {
     @Column(name = "description")
     private String descripcion;
 
+    @Column(name = "academic_cycle")
+    private String ciclo;
+
     @OneToMany(mappedBy = "subject", cascade = { CascadeType.REMOVE, CascadeType.MERGE })
     private List<Resource> resource;
+
+
 
     // Contructores
     public Subject() {
@@ -71,6 +76,8 @@ public class Subject {
     public void setResource(List<Resource> resource) {
         this.resource = resource;
     }
+    
+    
 
     // Hash & Equals
     @Override
@@ -96,6 +103,14 @@ public class Subject {
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+    public String getCiclo() {
+        return ciclo;
+    }
+
+    public void setCiclo(String ciclo) {
+        this.ciclo = ciclo;
     }
 
 }

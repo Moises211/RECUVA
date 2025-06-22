@@ -3,6 +3,7 @@ package com.gt11.RECUVA.Users;
 import java.util.List;
 
 import com.gt11.RECUVA.Ratings.Ratings;
+import com.gt11.RECUVA.Reports.Report;
 import com.gt11.RECUVA.Resources.Resource;
 
 import jakarta.persistence.CascadeType;
@@ -40,6 +41,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Ratings> ratings;
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    private List<Report> report;
 
     //Constructors    
 

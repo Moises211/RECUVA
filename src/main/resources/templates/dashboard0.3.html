@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Bienvenido a tu Dashboard</h1>
+
+    <p>Hola, <span sec:authentication="name">Usuario</span>!</p>
+
+    <!-- Este bloque solo será visible para usuarios con el rol ADMIN -->
+    <div sec:authorize="hasRole('ADMIN')">
+        <h2>Panel de Administración</h2>
+        <p>Aquí puedes gestionar usuarios y configuraciones importantes.</p>
+        <a href="/admin/settings">Ir a Configuración de Admin</a>
+    </div>
+
+    <!-- Este bloque será visible para usuarios con el rol USER o ADMIN -->
+    <div sec:authorize="hasAnyRole('USER', 'ADMIN')">
+        <h2>Sección de Usuario General</h2>
+        <p>Contenido accesible para usuarios normales y administradores.</p>
+        <a href="/user/profile">Ver mi Perfil</a>
+    </div>
+
+    <!-- Puedes usar 'not' para ocultar algo a un rol específico -->
+    <div sec:authorize="not hasRole('ADMIN')">
+        <p>Este mensaje es visible para usuarios que NO son ADMINS.</p>
+    </div>
+
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Cerrar Sesión</button>
+    </form>
+</body>
+</html>

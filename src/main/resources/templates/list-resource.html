@@ -1,238 +1,351 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta charset="UTF-8">
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Recursos Académicos</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fdf9f3;
-      margin: 0;
-      padding: 0;
-    }
+    <style>
+        /* Tus estilos CSS existentes */
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #fdf9f3;
+            margin: 0;
+            padding: 0;
+        }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 30px 50px;
-    }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 30px 50px;
+        }
 
-    .left-header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-    }
+        .left-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
 
-    .left-header img {
-      width: 50px;
-    }
+        .left-header img {
+            width: 50px;
+        }
 
-    .left-header h1 {
-      font-size: 18px;
-      margin: 5px 0;
-      color: #0d0d0d;
-      font-weight: bold;
-    }
+        .left-header h1 {
+            font-size: 18px;
+            margin: 5px 0;
+            color: #0d0d0d;
+            font-weight: bold;
+        }
 
-    .dropdown-toggle {
-      font-size: 24px;
-      cursor: pointer;
-      color: #888;
-      margin-top: -5px;
-    }
+        .dropdown-toggle {
+            font-size: 24px;
+            cursor: pointer;
+            color: #888;
+            margin-top: -5px;
+        }
 
-    .dropdown-menu {
-      display: none;
-      position: absolute;
-      top: 100%;
-      margin-top: 8px;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      width: 160px;
-      z-index: 100;
-    }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            margin-top: 8px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            width: 160px;
+            z-index: 100;
+        }
 
-    .dropdown-menu a {
-      display: block;
-      padding: 10px;
-      text-decoration: none;
-      color: #333;
-    }
+        .dropdown-menu a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+        }
 
-    .dropdown-menu a:hover {
-      background-color: #f0f0f0;
-    }
+        .dropdown-menu a:hover {
+            background-color: #f0f0f0;
+        }
 
-    .right-header {
-      display: flex;
-      align-items: center;
-    }
+        .right-header {
+            display: flex;
+            align-items: center;
+        }
 
-    .right-header img {
-      width: 30px;
-      margin-right: 10px;
-    }
+        .right-header img {
+            width: 30px;
+            margin-right: 10px;
+        }
 
-    .right-header span {
-      font-size: 18px;
-      color: #444;
-      margin-right: 20px;
-    }
+        .right-header span {
+            font-size: 18px;
+            color: #444;
+            margin-right: 20px;
+        }
 
-    .menu-icon {
-      font-size: 30px;
-      color: #aaa;
-      cursor: pointer;
-    }
+        .menu-icon {
+            font-size: 30px;
+            color: #aaa;
+            cursor: pointer;
+        }
 
-    table {
-      margin: 50px auto;
-      border-collapse: collapse;
-      width: 85%;
-      max-width: 1000px;
-      text-align: center;
-    }
+        table {
+            margin: 50px auto;
+            border-collapse: collapse;
+            width: 85%;
+            max-width: 1000px;
+            text-align: center;
+        }
 
-    th {
-      background-color: #8faaff;
-      color: #000;
-      font-weight: bold;
-      padding: 16px;
-      border: none;
-    }
+        th {
+            background-color: #8faaff;
+            color: #000;
+            font-weight: bold;
+            padding: 16px;
+            border: none;
+        }
 
-    td {
-      background-color: #e5ebff;
-      color: #000;
-      padding: 14px;
-      border: none;
-    }
+        td {
+            background-color: #e5ebff;
+            color: #000;
+            padding: 14px;
+            border: none;
+        }
 
-    a {
-      color: #2a7de1;
-      text-decoration: underline;
-    }
+        a {
+            color: #2a7de1;
+            text-decoration: underline;
+        }
 
-    a:hover {
-      color: #1a5fb4;
-    }
+        a:hover {
+            color: #1a5fb4;
+        }
 
-    @media screen and (max-width: 600px) {
-      .header {
-        flex-direction: column;
-        align-items: center;
-        padding: 15px;
-      }
+        /* Nuevos estilos para el modal del reporte */
+        .modal-body textarea {
+            min-height: 120px;
+            /* Altura mínima para el área de texto */
+        }
 
-      .right-header {
-        margin-top: 10px;
-      }
+        @media screen and (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: center;
+                padding: 15px;
+            }
 
-      table {
-        width: 95%;
-      }
-    }
-  </style>
+            .right-header {
+                margin-top: 10px;
+            }
+
+            table {
+                width: 95%;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-  <div class="header">
-    <div class="left-header">
-      <img src="logo.jpg" alt="Logo">
-      <h1>RECUVA</h1>
-      <div class="dropdown-toggle" onclick="toggleMenu()">▼</div>
-      <div class="dropdown-menu" id="dropdownMenu">
-        <a href="/dashboard">Principal</a>    
-        <a href="#" id="logout-link">Cerrar sesión</a>
-      </div>
-    </div>
+    <body>
 
-    <div class="container mt-4">
-        <div class="text-center mb-4">
-            <h1>Gestión de Recursos Académicos</h1>
-        </div>
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Lista de Recursos</h5>
+        <div class="header">
+            <div class="left-header">
+                <img src="/logo.jpg" alt="Logo">
+                <h1>RECUVA</h1>
+                <div class="dropdown-toggle" onclick="toggleMenu()">▼</div>
+                <div class="dropdown-menu" id="dropdownMenu">
+                <a href="/dashboard">Principal</a>
+                <a href="/resource">Recursos</a>
+                <a href="/reports" th:if="${isAdmin}">Reportes</a>
+
+                <a href="#" id="logout-link">Cerrar sesión</a>
+               </div>
+               </div>
+
+            <div class="container mt-4">
+                
+                <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show"
+                    role="alert">
+                    <span th:text="${successMessage}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+                    </div>
+                <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show"
+                    role="alert">
+                    <span th:text="${errorMessage}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+                    </div>
+
+                 <div class="text-center mb-4">
+                    <h1>Gestión de Recursos Académicos</h1>
+                </div>
+
+                <div class="card shadow mb-4 p-3">
+                <form th:action="@{/resource}" method="get" class="row g-3 align-items-center">
+                    <div class="col-md-4">
+                        <label for="cycleSearch" class="form-label visually-hidden">Buscar por Ciclo</label>
+                        <input type="text" class="form-control" id="cycleSearch" name="cycle" th:value="${param.cycle}" placeholder="Buscar por Ciclo...">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                        <a th:href="@{/resource}" class="btn btn-secondary ms-2">Limpiar</a>
+                    </div>
+                </form>
             </div>
-            <div class="card-body">
-                <!-- Tabla de recursos -->
-                <table class="table table-bordered table-striped table-hover">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Título</th>
-                            <th>Tipo</th>
-                            <th>Descripcion</th>
-                            <th>URL</th>
-                            <th>Año</th>
-                            <th>Materia</th>
-                            <th>Creador</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="recurso : ${resources}">
-                            <td th:text="${recurso.id}"></td>
-                            <td th:text="${recurso.titulo}"></td>
-                            <td th:text="${recurso.descripcion}"></td>
-                            <td th:text="${recurso.tipoDoc}"></td>
-                            <td th:text="${recurso.url}"></td>
-                            <td th:text="${recurso.fechaCreacion}"></td>
-                            <td th:text="${recurso.subject.materia}"></td>
-                            <td th:text="${recurso.user.name}"></td>
-                            <td>
-                                <a class="btn btn-sm btn-info" th:href="@{'/editResource/' + ${recurso.id}}">Editar</a>
-                                <a class="btn btn-sm btn-danger" th:href="@{'/deleteResource/' + ${recurso.id}}"
-                                   onclick="return confirm('¿Eliminar este recurso permanentemente?')">Eliminar</a>
-                                <!-- a class="btn btn-sm btn-secondary" th:href="@{'/detalles/' + ${recurso.id}}">Ver</a -->
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!-- Botón para agregar nuevo recurso -->
-                <div class="text-end mt-3">
-                    <a class="btn btn-success" th:href="@{/resourceNew}">Agregar Recurso</a>
+
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Lista de Recursos</h5>
+                        </div>
+                    <div class="card-body">
+
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                     <th>ID</th>
+                                    <th>Título</th>
+                                    <th>Descripción</th>
+                                    <th>Tipo</th>
+                                    <th>URL</th>
+                                    <th>Año</th>
+                                    <th>Materia</th>
+                                    <th>Ciclo</th>
+                                    <th>Creador</th>
+                                    <th th:if="${isAdmin}">Visibilidad</th>
+                                    <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                            <tbody>
+                                <tr th:each="recurso : ${resources}">
+                                    <td th:text="${recurso.id}"></td>
+                                    <td th:text="${recurso.titulo}"></td>
+                                    <td th:text="${recurso.descripcion}"></td>
+                                    <td th:text="${recurso.tipoDoc}"></td>
+                                    <td><a th:href="${recurso.url}" target="_blank"
+                                            th:text="${recurso.url}"></a></td>
+                                    <td th:text="${recurso.fechaCreacion != null ? #temporals.format(recurso.fechaCreacion, 'yyyy') : 'N/A'}">
+                                    </td>
+                                    <td th:text="${recurso.subject != null ? recurso.subject.materia : 'N/A'}"></td>
+                                    <td th:text="${recurso.subject.ciclo != null ? recurso.subject.ciclo : 'N/A'}"></td>
+                                    <td th:text="${recurso.user != null ? recurso.user.name : 'N/A'}"></td>
+                                    <td th:text="${recurso.visibilidad != null ? recurso.visibilidad.toString().replace('_', ' ') : 'N/A'}" th:if="${isAdmin}">
+                                    </td>
+                                    <td>                                        
+                                        <div sec:authorize="isAuthenticated()">
+                                            <a class="btn btn-sm btn-warning"
+                                                th:href="@{'/editResource/' + ${recurso.id}}"
+                                                th:if="${isAdmin} or (${currentUserId != null and recurso.user != null and recurso.user.id == currentUserId})">Editar</a>
+                                            <a class="btn btn-sm btn-danger"
+                                                th:href="@{'/deleteResource/' + ${recurso.id}}"
+                                                onclick="return confirm('¿Eliminar este recurso permanentemente?')"
+                                                th:if="${isAdmin} or (${currentUserId != null and recurso.user != null and recurso.user.id == currentUserId})">Eliminar</a>
+                                        </div>
+                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#reportModal" sec:authorize="isAuthenticated()" th:data-resource-id="${recurso.id}" th:data-resource-title="${recurso.titulo}">
+                                            Reportar
+                                        </button>                                                                                                                        
+                                    </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        
+                        <div class="text-end mt-3">
+                            <a class="btn btn-success" th:href="@{/resourceNew}"
+                                th:if="${isAdmin}">Agregar Recurso</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;">
-        </form>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const logoutLink = document.getElementById('logout-link');
-            if (logoutLink) {
-                logoutLink.addEventListener('click', function(event) {
-                    event.preventDefault(); // Previene la acción por defecto del enlace (navegar a #)
-                    document.getElementById('logoutForm').submit(); // Envía el formulario de logout
+        
+        <form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;"></form>
+
+        
+        <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true"
+            sec:authorize="isAuthenticated()">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reportModalLabel">Enviar Reporte para: <span
+                                id="modalResourceTitle"></span></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                        </div>
+                    <form th:action="@{/submit-from-modal}" method="post">
+                        <div class="modal-body">
+                            <input type="hidden" id="resourceIdInput" name="resourceId"
+                                value="">
+                            <div class="mb-3">
+                                <label for="motive" class="form-label">Descripción del
+                                    Problema:</label>
+                                <textarea class="form-control" id="motive" name="motive"
+                                    rows="5" required></textarea>
+                                <div class="form-text">Por favor, sea lo más descriptivo posible.</div>
+                                </div>
+                            <input type="hidden" th:if="${_csrf != null}"
+                                th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Enviar Reporte</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                
+        <script th:inline="javascript">
+
+            function toggleMenu() {
+                const menu = document.getElementById('dropdownMenu');
+                menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            }
+
+            document.addEventListener('click', function (event) {
+                const menu = document.getElementById('dropdownMenu');
+                const toggle = document.querySelector('.dropdown-toggle');
+                if (!menu.contains(event.target) && !toggle.contains(event.target)) {
+                    menu.style.display = 'none';
+                }
+            });
+
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const logoutLink = document.getElementById('logout-link');
+                if (logoutLink) {
+                    logoutLink.addEventListener('click', function (event) {
+                        event.preventDefault(); // Previene la acción por defecto del enlace (navegar a #)
+                        document.getElementById('logoutForm').submit(); // Envía el formulario de logout
+                    });
+                }
+            });
+
+
+            var reportModal = document.getElementById('reportModal');
+            if (reportModal) { // Solo añadir el listener si el modal existe
+                reportModal.addEventListener('show.bs.modal', function (event) {
+                    var button = event.relatedTarget;
+                    var resourceId = button.getAttribute('data-resource-id');
+                    var resourceTitle = button.getAttribute('data-resource-title');
+
+                    var modalTitleSpan = reportModal.querySelector('.modal-title #modalResourceTitle');
+                    var resourceIdInput = reportModal.querySelector('.modal-body #resourceIdInput');
+
+                    if (modalTitleSpan) modalTitleSpan.textContent = resourceTitle;
+                    if (resourceIdInput) resourceIdInput.value = resourceId;
                 });
             }
-        });
-    </script>
-    
-  <script>
-    function toggleMenu() {
-      const menu = document.getElementById('dropdownMenu');
-      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-    }
+        </script>
+    </body>
 
-    document.addEventListener('click', function(event) {
-      const menu = document.getElementById('dropdownMenu');
-      const toggle = document.querySelector('.dropdown-toggle');
-      if (!menu.contains(event.target) && !toggle.contains(event.target)) {
-        menu.style.display = 'none';
-      }
-    });
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
 </html>

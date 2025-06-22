@@ -173,6 +173,7 @@
             <div class="dropdown-arrow" onclick="toggleDropdown()">&#9660;</div>
             <div class="dropdown-menu" id="dropdownMenu">                
                 <a href="#" id="logout-link">Cerrar sesión</a>
+                <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" href="/reports">Reportes</a>
             </div>
         </div>
 
@@ -185,9 +186,8 @@
 
     <div class="section-title">Acciones rápidas</div>
     <div class="quick-access-buttons">
-        <a href="/resource" class="quick-access-button">Ver recursos</a>
-        <a th:href="@{/resourceNew}" class="quick-access-button">Insertar Recursos</a>
-        <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" href="/resources/add" class="quick-access-button add-resource">Añadir recursos</a>
+        <a href="/resource" class="quick-access-button">Ver recursos</a>        
+        <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/resourceNew}" class="quick-access-button add-resource">Añadir recursos</a>
     </div>
 
     <div class="section-title">Recursos destacados</div>

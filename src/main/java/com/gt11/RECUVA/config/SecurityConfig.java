@@ -1,9 +1,71 @@
+
+
+// --- Paso 3: Configuración de Seguridad (SecurityConfig.java) ---
 package com.gt11.RECUVA.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+// Quita el Customizer y las imports de AuthorizationRequestResolver si no se usan
+// import org.springframework.security.config.Customizer;
+// import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
+// import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
+// import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+// import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
+// import jakarta.servlet.http.HttpServletRequest;
+
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService; // Este sí es necesario
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    private final CustomOidcUserService customOidcUserService;
+
+    public SecurityConfig(CustomOidcUserService customOidcUserService) {
+        this.customOidcUserService = customOidcUserService;
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(authorize -> authorize
+                
+                .requestMatchers( "/login", "/css/**", "/images/**", "/error", "/logo.jpg").permitAll()
+                // Rutas que requieren roles específicos
+                .requestMatchers("/resourceNew", "/reports").hasRole("ADMIN")
+                .requestMatchers("/admin/**").hasRole("ADMIN") // Solo usuarios con ROLE_ADMIN
+                .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // Usuarios con ROLE_USER o ROLE_ADMIN
+                // Todas las demás rutas requieren autenticación (después de login con Auth0)
+                .anyRequest().authenticated()
+            )
+            .oauth2Login(oauth2 -> oauth2
+                 .userInfoEndpoint(userInfo -> userInfo
+                     .oidcUserService(customOidcUserService) 
+                 )
+                 .loginPage("/login") 
+                 .defaultSuccessUrl("/dashboard", true) 
+            )
+            .logout(logout -> logout
+                .logoutSuccessUrl("/login")
+                    .invalidateHttpSession(true)
+                    .clearAuthentication(true)
+                    .deleteCookies("JSESSIONID")
+                .permitAll()
+            )
+            .csrf(csrf -> csrf.disable()); 
+
+        return http.build();
+    }
+}
+
 
 // src/main/java/com/gt11/RECUVA/config/SecurityConfiguration.java
 
 
-import org.springframework.context.annotation.Bean;
+/*import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;

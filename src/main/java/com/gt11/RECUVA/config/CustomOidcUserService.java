@@ -1,6 +1,10 @@
-// src/main/java/com/gt11/RECUVA/config/CustomOidcUserService.java
+// --- Paso 2: Servicio de Usuario OIDC Personalizado (CustomOidcUserService.java) ---
 package com.gt11.RECUVA.config;
 
+import com.gt11.RECUVA.Users.User; // ¡Importa tu entidad User existente!
+import com.gt11.RECUVA.Users.UsersRepository; // ¡Importa tu UserRepository existente!
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
@@ -10,73 +14,68 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-// Importa el logger de SLF4J
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-@Service // Asegúrate de que esta anotación esté presente
+@Service
 public class CustomOidcUserService extends OidcUserService {
 
-    private static final String ROLES_CLAIM = "https://dev-ygztsimsgp6ywe30.us.auth0.com/roles";
-    // Declara el logger
     private static final Logger log = LoggerFactory.getLogger(CustomOidcUserService.class);
+
+    private final UsersRepository userRepository; // Usa tu UserRepository existente
+
+    // Inyecta tu UserRepository
+    public CustomOidcUserService(UsersRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
-        // Llama al método de la clase padre para obtener el OidcUser base
+        // Primero, carga el usuario OIDC estándar desde Auth0
         OidcUser oidcUser = super.loadUser(userRequest);
 
-        log.debug("--- CustomOidcUserService: Iniciando procesamiento de usuario ---");
-        log.debug("Authorities iniciales de OidcUser: {}", oidcUser.getAuthorities());
-        log.debug("Claims iniciales de OidcUser (userinfo): {}", oidcUser.getClaims());
-
-        // Obtener todos los claims del ID Token (esto es crucial)
-        Map<String, Object> idTokenClaims = oidcUser.getIdToken().getClaims();
-        log.debug("Todos los claims del ID Token recibido: {}", idTokenClaims);
+        log.info("--- CustomOidcUserService: Procesando usuario desde Auth0 ---");
+        log.info("Email del usuario autenticado por Auth0: {}", oidcUser.getEmail());
+        log.info("Authorities iniciales de OidcUser (de Auth0): {}", oidcUser.getAuthorities());
 
         Set<GrantedAuthority> authorities = new HashSet<>(oidcUser.getAuthorities());
 
-        // Intenta obtener el claim de roles del ID Token
-        Object rolesClaim = idTokenClaims.get(ROLES_CLAIM);
+        // Obtén el email del usuario de Auth0
+        String userEmail = oidcUser.getEmail();
 
-        log.debug("Intentando obtener el claim de roles: {}", ROLES_CLAIM);
-        log.debug("Valor crudo del claim de roles del ID Token: {}", rolesClaim);
+        if (userEmail != null) {
+            // Busca el usuario en tu base de datos local por email usando tu UserRepository
+            Optional<User> localDbUserOptional = userRepository.findByEmail(userEmail);
 
-        if (rolesClaim instanceof List) {
-            List<String> roles = (List<String>) rolesClaim;
-            log.debug("Claim de roles encontrado y es una Lista: {}", roles);
-            roles.stream()
-                    .map(role -> "ROLE_" + role.toUpperCase()) // Convertir a formato Spring Security
-                    .map(SimpleGrantedAuthority::new)
-                    .forEach(authorities::add);
-            log.debug("Roles añadidos a las autoridades: {}",
-                    roles.stream().map(role -> "ROLE_" + role.toUpperCase()).collect(Collectors.toList()));
-        } else if (rolesClaim != null) {
-            log.warn("El claim de roles no es una Lista, es de tipo: {}", rolesClaim.getClass().getName());
+            if (localDbUserOptional.isPresent()) {
+                User localDbUser = localDbUserOptional.get();
+                Boolean isAdmin = localDbUser.getRole(); // Obtiene el valor booleano del campo 'role'
+
+                String roleName;
+                if (isAdmin != null && isAdmin) { // Si es true (ADMIN)
+                    roleName = "ADMIN";
+                } else { // Si es false o null (se trata como USER)
+                    roleName = "USER";
+                }
+                log.info("Usuario local encontrado con email '{}'. Se asigna el rol: {}", userEmail, roleName);
+
+                // Convierte el rol local a un rol de Spring Security (ej. "ADMIN" -> "ROLE_ADMIN")
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + roleName.toUpperCase()));
+            } else {
+                log.warn("Usuario con email '{}' autenticado por Auth0 NO encontrado en la base de datos local. No se asignarán roles locales basados en DB.", userEmail);
+                // Opcional: Si el usuario no existe en tu DB local, podrías asignarle un rol predeterminado
+                // por ejemplo, siempre ROLE_USER si no está en la DB:
+                // authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            }
         } else {
-            log.info("El claim de roles '{}' NO fue encontrado en el ID Token.", ROLES_CLAIM);
+            log.error("El email del usuario no está disponible en el ID Token de Auth0. No se pueden buscar roles locales en la DB.");
         }
 
-        log.debug("Authorities finales después del CustomOidcUserService: {}", authorities);
-        log.debug("--- CustomOidcUserService: Finalizando procesamiento de usuario ---");
+        log.info("Authorities finales después de combinar con roles locales: {}", authorities);
+        log.info("--- CustomOidcUserService: Finalizado ---");
 
-        // Imprimir el ID Token completo (solo para depuración, no en producción)
-        String rawIdToken = userRequest.getIdToken().getTokenValue();
-        log.info("Raw ID Token received: {}", rawIdToken);
-
-        // Imprimir todos los claims del ID Token para ver qué está llegando
-        Map<String, Object> claims = oidcUser.getIdToken().getClaims();
-        log.info("All ID Token Claims received:");
-        claims.forEach((key, value) -> log.info("  Claim: {} = {}", key, value));
-
-        // Retornar un nuevo DefaultOidcUser con las autoridades actualizadas
+        // Retorna un nuevo DefaultOidcUser con las autoridades combinadas
         return new DefaultOidcUser(authorities, oidcUser.getIdToken(), oidcUser.getUserInfo());
     }
 }

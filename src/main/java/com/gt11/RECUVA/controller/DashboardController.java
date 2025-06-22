@@ -18,12 +18,12 @@ public class DashboardController {
     public String dashboard(@AuthenticationPrincipal OidcUser principal, Model model) {
         if (principal != null) {
             // Obtener el nombre del usuario (puedes ajustar 'name' por 'nickname', 'preferred_username', etc. según tus claims de Auth0)
-            String userName = principal.getAttribute("name");
+            String userName = principal.getClaim("name");
             if (userName == null || userName.isEmpty()) {
-                userName = principal.getEmail(); // Fallback al email si el nombre no está disponible
+                userName = principal.getClaim("nickname"); // Fallback al email si el nombre no está disponible
             }
             if (userName == null || userName.isEmpty()) {
-                 userName = principal.getPreferredUsername(); // Otro fallback si el nombre no está disponible
+                 userName = principal.getEmail(); // Otro fallback si el nombre no está disponible
             }
             if (userName == null || userName.isEmpty()) {
                 userName = principal.getSubject(); // Último recurso, el ID del usuario

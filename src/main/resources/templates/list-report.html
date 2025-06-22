@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Gestión de Reportes</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #fdf9f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 30px 50px;
+        }
+
+        .left-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .left-header img {
+            width: 50px;
+        }
+
+        .left-header h1 {
+            font-size: 18px;
+            margin: 5px 0;
+            color: #0d0d0d;
+            font-weight: bold;
+        }
+
+        .dropdown-toggle {
+            font-size: 24px;
+            cursor: pointer;
+            color: #888;
+            margin-top: -5px;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            margin-top: 8px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            width: 160px;
+            z-index: 100;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .right-header {
+            display: flex;
+            align-items: center;
+        }
+
+        .right-header img {
+            width: 30px;
+            margin-right: 10px;
+        }
+
+        .right-header span {
+            font-size: 18px;
+            color: #444;
+            margin-right: 20px;
+        }
+
+        .menu-icon {
+            font-size: 30px;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        table {
+            margin: 50px auto;
+            border-collapse: collapse;
+            width: 85%;
+            max-width: 1200px; /* Ancho un poco mayor para más columnas */
+            text-align: center;
+        }
+
+        th {
+            background-color: #ff8f8f; /* Un color distinto para los reportes */
+            color: #000;
+            font-weight: bold;
+            padding: 16px;
+            border: none;
+        }
+
+        td {
+            background-color: #ffe5e5; /* Un color distinto para los reportes */
+            color: #000;
+            padding: 14px;
+            border: none;
+        }
+
+        a {
+            color: #2a7de1;
+            text-decoration: underline;
+        }
+
+        a:hover {
+            color: #1a5fb4;
+        }
+
+        @media screen and (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: center;
+                padding: 15px;
+            }
+
+            .right-header {
+                margin-top: 10px;
+            }
+
+            table {
+                width: 98%; /* Ajuste para móviles */
+            }
+
+            th, td {
+                padding: 8px; /* Reducir padding en móviles */
+                font-size: 0.9em;
+            }
+
+            .btn {
+                padding: 5px 10px; /* Botones más pequeños en móviles */
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="left-header">
+            <img src="/logo.jpg" alt="Logo">
+            <h1>RECUVA</h1>
+            <div class="dropdown-toggle" onclick="toggleMenu()">▼</div>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="/dashboard">Principal</a>
+                <a href="/resource">Recursos</a>
+                <a href="/reports">Reportes</a>
+                <a href="#" id="logout-link">Cerrar sesión</a>
+            </div>
+        </div>
+
+        <div class="container mt-4">
+            <!-- Mensajes de éxito o error (Flash Attributes del controlador) -->
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${successMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${errorMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="text-center mb-4">
+                <h1>Gestión de Reportes</h1>
+            </div>
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Lista de Reportes</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>ID Reporte</th>
+                                <th>Título del Recurso</th>
+                                <th>Motivo del Reporte</th>
+                                <th>Fecha del Reporte</th>
+                                <th>Reportado Por</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="report : ${reports}">
+                                <td th:text="${report.id}"></td>
+                                <td th:text="${report.resource != null ? report.resource.titulo : 'Recurso Eliminado'}"></td>
+                                <td th:text="${report.motivo}"></td>
+                                <td th:text="${report.fecha != null ? #temporals.format(report.fecha, 'dd-MM-yyyy') : 'N/A'}"></td>
+                                <td th:text="${report.user != null ? report.user.name : 'Usuario Desconocido'}"></td>
+                                <td>
+                                    <!-- Enlace para Eliminar Reporte (solo para ADMIN) -->
+                                    <a class="btn btn-sm btn-danger"
+                                       th:href="@{'/delete/' + ${report.id}}"
+                                       onclick="return confirm('¿Estás seguro de que deseas eliminar este reporte permanentemente?')"
+                                       sec:authorize="hasRole('ADMIN')">
+                                        Eliminar Reporte
+                                    </a>
+
+                                    <!-- Enlace para Eliminar Recurso Asociado (solo para ADMIN y si el recurso existe) -->
+                                    <a class="btn btn-sm btn-warning"
+                                       th:if="${report.resource != null}"
+                                       th:href="@{'/resources/delete-from-report/' + ${report.resource.id}}"
+                                       onclick="return confirm('¡ATENCIÓN! Estás a punto de eliminar el recurso &quot;' + ([[${report.resource.titulo}]] != null ? [[${report.resource.titulo}]] : 'Recurso') + '&quot;. Esto eliminará también TODOS los reportes asociados a este recurso. ¿Estás seguro?')"
+                                       sec:authorize="hasRole('ADMIN')">
+                                        Eliminar Recurso
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(reports)}">
+                                <td colspan="6">No hay reportes para mostrar.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario de Logout (oculto) -->
+    <form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;"></form>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:inline="javascript">
+        // JavaScript para el menú desplegable del logo
+        function toggleMenu() {
+            const menu = document.getElementById('dropdownMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('dropdownMenu');
+            const toggle = document.querySelector('.dropdown-toggle');
+            if (!menu.contains(event.target) && !toggle.contains(event.target)) {
+                menu.style.display = 'none';
+            }
+        });
+
+        // JavaScript para el logout
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(event) {
+                    event.preventDefault(); // Previene la acción por defecto del enlace (navegar a #)
+                    document.getElementById('logoutForm').submit(); // Envía el formulario de logout
+                });
+            }
+        });
+
+        // NOTA: Los scripts de los modales de eliminación se han eliminado
+        // ya que la funcionalidad de confirmación ahora se maneja directamente con onclick="return confirm(...)"
+    </script>
+</body>
+</html>
